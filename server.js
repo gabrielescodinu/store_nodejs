@@ -99,7 +99,6 @@ app.get('/registration', (req, res) => {
 });
 
 // students ---------------------------------------------------------------------------------------------------------------------------------
-
 // create
 app.post('/student-create', (req, res) => {
     const { name, email, message } = req.body;
