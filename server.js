@@ -5,19 +5,9 @@ const ejs = require('ejs');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const app = express();
+const db = require('./config');
 const port = 3000;
 
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'test_node'
-});
-
-db.connect(err => {
-    if (err) throw err;
-    console.log('Connected to MySQL database!');
-});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
