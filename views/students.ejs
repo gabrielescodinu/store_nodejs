@@ -1,27 +1,51 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Students List</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <h1>Students List</h1>
+    <a href="student-create">Create Student</a>
     <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Message</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% students.forEach(student => { %>
-          <tr>
-            <td><%= student.name %></td>
-            <td><%= student.email %></td>
-            <td><%= student.message %></td>
-          </tr>
-        <% }) %>
-      </tbody>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Action</th> <!-- Aggiungi questa colonna per il bottone di modifica -->
+            </tr>
+        </thead>
+        <tbody>
+            <% students.forEach(student=> { %>
+                <tr>
+                    <td>
+                        <%= student.name %>
+                    </td>
+                    <td>
+                        <%= student.email %>
+                    </td>
+                    <td>
+                        <%= student.message %>
+                    </td>
+                    <td>
+                        <form action="/student-edit" method="post">
+                            <!-- Aggiungi un form per ogni bottone di modifica -->
+                            <input type="hidden" name="id" value="<%= student.id %>">
+                            <!-- Aggiungi un campo hidden per l'id dello studente -->
+                            <button type="submit">Edit</button> <!-- Aggiungi il bottone di modifica -->
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/student-delete/<%= student.id %>" method="post">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
     </table>
-  </body>
+</body>
+
 </html>
