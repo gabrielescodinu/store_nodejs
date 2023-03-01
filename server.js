@@ -10,7 +10,6 @@ const port = 3000;
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(cookieParser());
 app.use(session({
@@ -19,20 +18,9 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.post('/submit', (req, res) => {
-    const name = req.body.name;
-    const email = req.body.email;
-    const message = req.body.message;
-    const sql = 'INSERT INTO students (name, email, message) VALUES (?, ?, ?)';
-    db.query(sql, [name, email, message], (err, result) => {
-        if (err) throw err;
-        console.log('Data inserted into MySQL database!');
-        res.send('Data inserted into MySQL database!');
-    });
-});
-
+// login ---------------------------------------------------------------------------------------------------------------------------------
 app.get('/login', (req, res) => {
-    res.render('login'); // assumes you have a login.ejs file in your views folder
+    res.render('login');
 });
 
 app.post('/login', (req, res) => {
@@ -59,7 +47,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Handle POST requests to log out
+// logout ---------------------------------------------------------------------------------------------------------------------------------
 app.get('/logout', (req, res) => {
     // Destroy the user's session
     req.session.destroy(err => {
@@ -148,8 +136,13 @@ app.post('/student-delete/:id', (req, res) => {
 });
 
 
-
+// homepage ---------------------------------------------------------------------------------------------------------------------------------
 app.get('/', (req, res) => {
+    res.render('index');
+});
+
+// dashboard ---------------------------------------------------------------------------------------------------------------------------------
+app.get('/dashboard', (req, res) => {
     res.render('dashboard');
 });
 
@@ -162,9 +155,10 @@ const requireLogin = (req, res, next) => {
 };
 
 app.get('/dashboard', requireLogin, (req, res) => {
-    res.render('dashboard'); // assumes you have a dashboard.ejs file in your views folder
+    res.render('dashboard');
 });
 
+// port ---------------------------------------------------------------------------------------------------------------------------------
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
