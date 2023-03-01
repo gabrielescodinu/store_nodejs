@@ -8,6 +8,8 @@ const app = express();
 const db = require('./config');
 const port = 3000;
 
+const studentController = require('./studentController');
+const router = require('./router');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
