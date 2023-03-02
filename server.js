@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const express = require('express');
 const studentController = require('./studentController');
+const userController = require('./userController');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const session = require('express-session');
@@ -9,6 +10,7 @@ const app = express();
 const db = require('./config');
 const port = 3000;
 
+// configuration middleware and express application ---------------------------------------------------------------------------------------------------------------------------------
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(cookieParser());
@@ -58,33 +60,12 @@ app.get('/logout', (req, res) => {
     });
 });
 
-
 // registration ---------------------------------------------------------------------------------------------------------------------------------
 app.post('/registration', (req, res) => {
-    const { username, password } = req.body;
-
-    // Insert new user into the database
-    const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
-    db.query(sql, [username, password], (err, result) => {
-        if (err) throw err;
-        console.log('User created!');
-        res.redirect('/login');
-    });
+    userController.createUser(req, res, db);
 });
 
-app.get('/registration', (req, res) => {
-    res.render('registration');
-});
-
-// students ---------------------------------------------------------------------------------------------------------------------------------
-app.post('/student-create', (req, res) => studentController.storeStudent(req, res, db));
-app.get('/student-create', studentController.createStudent);
-app.get('/students', (req, res) => studentController.getStudents(req, res, db));
-app.post('/student-edit', (req, res) => studentController.editStudent(req, res, db));
-app.post('/students/:id/update', (req, res) => studentController.updateStudent(req, res, db));
-app.post('/student-delete/:id', (req, res) => studentController.deleteStudent(req, res, db));
-
-
+app.get('/registration', userController.getCreateUserPage);
 
 // homepage ---------------------------------------------------------------------------------------------------------------------------------
 app.get('/', (req, res) => {
@@ -92,10 +73,6 @@ app.get('/', (req, res) => {
 });
 
 // dashboard ---------------------------------------------------------------------------------------------------------------------------------
-app.get('/dashboard', (req, res) => {
-    res.render('dashboard');
-});
-
 const requireLogin = (req, res, next) => {
     if (req.session.loggedIn) {
         next();
@@ -107,6 +84,14 @@ const requireLogin = (req, res, next) => {
 app.get('/dashboard', requireLogin, (req, res) => {
     res.render('dashboard');
 });
+
+// students ---------------------------------------------------------------------------------------------------------------------------------
+app.post('/student-create', (req, res) => studentController.storeStudent(req, res, db));
+app.get('/student-create', requireLogin, studentController.createStudent);
+app.get('/students', (req, res) => studentController.getStudents(req, res, db));
+app.post('/student-edit', (req, res) => studentController.editStudent(req, res, db));
+app.post('/students/:id/update', (req, res) => studentController.updateStudent(req, res, db));
+app.post('/student-delete/:id', (req, res) => studentController.deleteStudent(req, res, db));
 
 // port ---------------------------------------------------------------------------------------------------------------------------------
 app.listen(port, () => {
