@@ -43,7 +43,7 @@ app.get('/dashboard', userController.requireLogin, userController.dashboard);
 
 // students ---------------------------------------------------------------------------------------------------------------------------------
 app.post('/student-create', (req, res) => studentController.storeStudent(req, res, db));
-app.get('/student-create', userController.requireLogin, studentController.createStudent);
+app.get('/student-create', studentController.createStudent);
 app.get('/students', (req, res) => studentController.getStudents(req, res, db));
 app.post('/student-edit', (req, res) => studentController.editStudent(req, res, db));
 app.post('/students/:id/update', (req, res) => studentController.updateStudent(req, res, db));

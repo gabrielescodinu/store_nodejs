@@ -1,7 +1,7 @@
 // registration ---------------------------------------------------------------------------------------------------------------------------------
 
 function createUser(req, res, db) {
-    const { username, password } = req.body;
+    const { username, password } = req.body;    
 
     // Insert new user into the database
     const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
