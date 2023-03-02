@@ -1,6 +1,20 @@
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+// multer configuration
+const multer  = require('multer');
+const path = require('path');
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/uploads/');
+    },
+    filename: function (req, file, cb) {
+        const ext = path.parse(file.originalname).ext;
+        cb(null, file.fieldname + '-' + Date.now() + ext);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// store
 function storeStudent(req, res, db) {
     upload.single('image')(req, res, function (err) {
         if (err instanceof multer.MulterError) {
@@ -13,7 +27,7 @@ function storeStudent(req, res, db) {
 
         // Everything went fine. Proceed with storing the student in the database.
         const { name, email, message } = req.body;
-        const imagePath = req.file.path;
+        const imagePath = path.join('./public/uploads/', req.file.filename);
 
         const sql = 'INSERT INTO students (name, email, message, image) VALUES (?, ?, ?, ?)';
         db.query(sql, [name, email, message, imagePath], function (err, result) {
@@ -23,19 +37,6 @@ function storeStudent(req, res, db) {
         });
     });
 }
-
-// store
-// function storeStudent(req, res, db) {
-//     const { name, email, message } = req.body;
-
-//     const sql = 'INSERT INTO students (name, email, message) VALUES (?, ?, ?)';
-//     db.query(sql, [name, email, message], (err, result) => {
-//         if (err) throw err;
-//         console.log('Student created!');
-//         res.redirect('/students');
-//     });
-// }
-
 
 // create
 function createStudent(req, res) {
