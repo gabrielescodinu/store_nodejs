@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const express = require('express');
+const studentController = require('./studentController');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const session = require('express-session');
@@ -7,9 +8,6 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const db = require('./config');
 const port = 3000;
-
-const studentController = require('./studentController');
-const router = require('./router');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
@@ -79,63 +77,13 @@ app.get('/registration', (req, res) => {
 });
 
 // students ---------------------------------------------------------------------------------------------------------------------------------
-// create
-app.post('/student-create', (req, res) => {
-    const { name, email, message } = req.body;
+app.post('/student-create', (req, res) => studentController.storeStudent(req, res, db));
+app.get('/student-create', studentController.createStudent);
+app.get('/students', (req, res) => studentController.getStudents(req, res, db));
+app.post('/student-edit', (req, res) => studentController.editStudent(req, res, db));
+app.post('/students/:id/update', (req, res) => studentController.updateStudent(req, res, db));
+app.post('/student-delete/:id', (req, res) => studentController.deleteStudent(req, res, db));
 
-    const sql = 'INSERT INTO students (name, email, message) VALUES (?, ?, ?)';
-    db.query(sql, [name, email, message], (err, result) => {
-        if (err) throw err;
-        console.log('Student created!');
-        res.redirect('/students');
-    });
-});
-
-app.get('/student-create', (req, res) => {
-    res.render('student-create');
-});
-
-// index
-app.get('/students', (req, res) => {
-    const sql = 'SELECT * FROM students';
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        res.render('students', { students: result });
-    });
-});
-
-// edit
-app.post('/student-edit', (req, res) => {
-    const { id } = req.body;
-    const sql = 'SELECT * FROM students WHERE id = ?';
-    db.query(sql, [id], (err, result) => {
-        if (err) throw err;
-        res.render('student-edit', { student: result[0] });
-    });
-});
-
-// update
-app.post('/students/:id/update', (req, res) => {
-    const studentId = req.params.id;
-    const { name, email, message } = req.body;
-    const sql = 'UPDATE students SET name = ?, email = ?, message = ? WHERE id = ?';
-    db.query(sql, [name, email, message, studentId], (err, result) => {
-        if (err) throw err;
-        console.log('Student updated!');
-        res.redirect('/students');
-    });
-});
-
-// delete
-app.post('/student-delete/:id', (req, res) => {
-    const studentId = req.params.id;
-    const sql = 'DELETE FROM students WHERE id = ?';
-    db.query(sql, [studentId], (err, result) => {
-        if (err) throw err;
-        console.log(`Student with id ${studentId} deleted!`);
-        res.redirect('/students');
-    });
-});
 
 
 // homepage ---------------------------------------------------------------------------------------------------------------------------------
