@@ -62,6 +62,16 @@ function editStudent(req, res, db) {
     });
 }
 
+// show
+function showStudent(req, res, db) {
+    const { id } = req.body;
+    const sql = 'SELECT * FROM students WHERE id = ?';
+    db.query(sql, [id], (err, result) => {
+        if (err) throw err;
+        res.render('student-show', { student: result[0] });
+    });
+}
+
 // update
 function updateStudent(req, res, db) {
     const studentId = req.params.id;
@@ -86,4 +96,4 @@ function deleteStudent(req, res, db) {
 }
 
 // export
-module.exports = { storeStudent, createStudent, getStudents, editStudent, updateStudent, deleteStudent };
+module.exports = { storeStudent, createStudent, getStudents, editStudent, showStudent, updateStudent, deleteStudent };

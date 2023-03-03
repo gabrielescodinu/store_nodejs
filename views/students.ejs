@@ -38,6 +38,14 @@
                         </form>
                     </td>
                     <td>
+                        <form action="/student-show" method="post">
+                            <!-- Aggiungi un form per ogni bottone di modifica -->
+                            <input type="hidden" name="id" value="<%= student.id %>">
+                            <!-- Aggiungi un campo hidden per l'id dello studente -->
+                            <button type="submit">Show</button> <!-- Aggiungi il bottone di modifica -->
+                        </form>
+                    </td>
+                    <td>
                         <form action="/student-delete/<%= student.id %>" method="post">
                             <button type="submit">Delete</button>
                         </form>
