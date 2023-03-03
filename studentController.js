@@ -27,7 +27,7 @@ function storeStudent(req, res, db) {
 
         // Everything went fine. Proceed with storing the student in the database.
         const { name, email, message } = req.body;
-        const imagePath = path.join('./public/uploads/', req.file.filename);
+        const imagePath = path.join('./uploads/', req.file.filename);
 
         const sql = 'INSERT INTO students (name, email, message, image) VALUES (?, ?, ?, ?)';
         db.query(sql, [name, email, message, imagePath], function (err, result) {
