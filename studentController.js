@@ -1,5 +1,6 @@
 // multer configuration
 const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
 
 const storage = multer.diskStorage({
@@ -123,15 +124,28 @@ function updateStudent(req, res, db) {
 
 
 // delete
+// delete
 function deleteStudent(req, res, db) {
     const studentId = req.params.id;
-    const sql = 'DELETE FROM students WHERE id = ?';
+    const sql = 'SELECT image FROM students WHERE id = ?';
     db.query(sql, [studentId], (err, result) => {
         if (err) throw err;
-        console.log(`Student with id ${studentId} deleted!`);
-        res.redirect('/students');
+        const imagePath = result[0].image;
+        const deleteSql = 'DELETE FROM students WHERE id = ?';
+        db.query(deleteSql, [studentId], (err, result) => {
+            if (err) throw err;
+            console.log(`Student with id ${studentId} deleted!`);
+            if (imagePath) {
+                fs.unlink(`./public/${imagePath}`, (err) => {
+                    if (err) throw err;
+                    console.log(`Image ${imagePath} deleted!`);
+                });
+            }
+            res.redirect('/students');
+        });
     });
 }
+
 
 // export
 module.exports = { storeStudent, createStudent, getStudents, editStudent, showStudent, updateStudent, deleteStudent };
