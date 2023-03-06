@@ -5,7 +5,7 @@ const ejs = require('ejs');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const app = express();
-app.use( express.static( "public" ) );
+app.use(express.static("public"));
 
 const studentController = require('./studentController');
 const userController = require('./userController');
@@ -44,6 +44,11 @@ app.post('/registration', (req, res) => {
 app.get('/registration', userController.getCreateUserPage);
 // dashboard
 app.get('/dashboard', userController.requireLogin, userController.dashboard);
+// admin
+app.get('/admin', userController.requireLogin, userController.requireAdmin, userController.adminOnlyHandler);
+
+
+
 
 // students ---------------------------------------------------------------------------------------------------------------------------------
 app.post('/student-create', (req, res) => studentController.storeStudent(req, res, db));

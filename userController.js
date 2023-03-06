@@ -1,7 +1,6 @@
 // registration ---------------------------------------------------------------------------------------------------------------------------------
-
 function createUser(req, res, db) {
-    const { username, password } = req.body;    
+    const { username, password } = req.body;
 
     // Insert new user into the database
     const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
@@ -23,6 +22,7 @@ const login = (req, res) => {
     res.render('login');
 };
 
+// loginUser
 const loginUser = (req, res) => {
     const { username, password } = req.body;
 
@@ -37,6 +37,11 @@ const loginUser = (req, res) => {
             // Check if the password is correct
             if (user.password === password) {
                 req.session.loggedIn = true;
+                req.session.user = {
+                    id: user.id,
+                    username: user.username,
+                    is_admin: user.is_admin,
+                };
                 res.redirect('/dashboard');
             } else {
                 res.send('Invalid username or password');
@@ -46,6 +51,22 @@ const loginUser = (req, res) => {
         }
     });
 };
+
+// require admin
+const requireAdmin = (req, res, next) => {
+    const user = req.session.user;
+    if (user && user.is_admin === 1) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+};
+
+// adminOnlyHandler
+const adminOnlyHandler = (req, res) => {
+    res.render('admin');
+};
+
 
 // logout ---------------------------------------------------------------------------------------------------------------------------------
 const logout = (req, res) => {
@@ -58,8 +79,7 @@ const logout = (req, res) => {
     });
 };
 
-
-
+// require login
 const requireLogin = (req, res, next) => {
     if (req.session.loggedIn) {
         next();
@@ -68,8 +88,9 @@ const requireLogin = (req, res, next) => {
     }
 };
 
+// dashboard
 const dashboard = (req, res) => {
     res.render('dashboard');
 };
 
-module.exports = { createUser, getCreateUserPage, login, loginUser, logout, requireLogin, dashboard };
+module.exports = { createUser, getCreateUserPage, login, loginUser, requireAdmin, adminOnlyHandler, logout, requireLogin, dashboard };
