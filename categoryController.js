@@ -27,11 +27,11 @@ function storeCategory(req, res, db) {
         }
 
         // Everything went fine. Proceed with storing the category in the database.
-        const { name, email, message } = req.body;
+        const { name } = req.body;
         const imagePath = path.join('./uploads/', req.file.filename);
 
-        const sql = 'INSERT INTO categories (name, email, message, image) VALUES (?, ?, ?, ?)';
-        db.query(sql, [name, email, message, imagePath], function (err, result) {
+        const sql = 'INSERT INTO categories (name, image) VALUES (?, ?)';
+        db.query(sql, [name, imagePath], function (err, result) {
             if (err) throw err;
             console.log('Category created!');
             res.redirect('/categories');
@@ -96,7 +96,7 @@ function updateCategory(req, res, db) {
         }
 
         // Everything went fine. Proceed with updating the category in the database.
-        const { name, email, message } = req.body;
+        const { name } = req.body;
         let imagePath = req.file ? path.join('./uploads/', req.file.filename) : null;
 
         if (!imagePath) {
@@ -124,8 +124,8 @@ function updateCategory(req, res, db) {
         }
 
         function updateCategoryInDatabase() {
-            const sql = 'UPDATE categories SET name = ?, email = ?, message = ?, image = ? WHERE id = ?';
-            db.query(sql, [name, email, message, imagePath, categoryId], (err, result) => {
+            const sql = 'UPDATE categories SET name = ?, image = ? WHERE id = ?';
+            db.query(sql, [name, imagePath, categoryId], (err, result) => {
                 if (err) throw err;
                 console.log('Category updated!');
                 res.redirect('/categories');
