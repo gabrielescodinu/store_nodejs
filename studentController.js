@@ -108,7 +108,19 @@ function updateStudent(req, res, db) {
                 updateStudentInDatabase();
             });
         } else {
-            updateStudentInDatabase();
+            // Delete the previous image associated with the student from the server
+            const sql = 'SELECT image FROM students WHERE id = ?';
+            db.query(sql, [studentId], (err, result) => {
+                if (err) throw err;
+                const previousImagePath = result[0].image;
+                if (previousImagePath) {
+                    fs.unlink(`./public/${previousImagePath}`, (err) => {
+                        if (err) throw err;
+                        console.log(`Image ${previousImagePath} deleted!`);
+                    });
+                }
+                updateStudentInDatabase();
+            });
         }
 
         function updateStudentInDatabase() {
@@ -121,6 +133,7 @@ function updateStudent(req, res, db) {
         }
     });
 }
+
 
 
 // delete
