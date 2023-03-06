@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Products List</title>
+</head>
+
+<body>
+    <h1>Products List</h1>
+    <a href="product/product-create">Create Product</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Action</th> <!-- Aggiungi questa colonna per il bottone di modifica -->
+            </tr>
+        </thead>
+        <tbody>
+            <% products.forEach(product=> { %>
+                <tr>
+                    <td>
+                        <%= product.name %>
+                    </td>
+                    <td>
+                        <%= product.email %>
+                    </td>
+                    <td>
+                        <%= product.message %>
+                    </td>
+                    <td>
+                        <form action="/product-edit" method="post">
+                            <!-- Aggiungi un form per ogni bottone di modifica -->
+                            <input type="hidden" name="id" value="<%= product.id %>">
+                            <!-- Aggiungi un campo hidden per l'id dello producte -->
+                            <button type="submit">Edit</button> <!-- Aggiungi il bottone di modifica -->
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/product-show" method="post">
+                            <!-- Aggiungi un form per ogni bottone di modifica -->
+                            <input type="hidden" name="id" value="<%= product.id %>">
+                            <!-- Aggiungi un campo hidden per l'id dello producte -->
+                            <button type="submit">Show</button> <!-- Aggiungi il bottone di modifica -->
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/product-delete/<%= product.id %>" method="post">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</body>
+
+</html>

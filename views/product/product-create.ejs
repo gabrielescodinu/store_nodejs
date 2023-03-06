@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Product Create</title>
+</head>
+
+<body>
+	<h1>Product Create</h1>
+	<form action="/product-create" method="POST" enctype="multipart/form-data">
+		<div>
+			<label for="name">name:</label>
+			<input type="text" id="name" name="name" required>
+		</div>
+		<div>
+			<label for="email">email:</label>
+			<input type="email" id="email" name="email" required>
+		</div>
+		<div>
+			<label for="message">message:</label>
+			<input type="message" id="message" name="message" required>
+		</div>
+		<div>
+			<label for="image">image:</label>
+			<input type="file" id="image" name="image">
+		</div>
+		<button type="submit">Create</button>
+	</form>
+</body>
+
+</html>

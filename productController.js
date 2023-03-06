@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // store
-function storeStudent(req, res, db) {
+function storeProduct(req, res, db) {
     upload.single('image')(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             // A Multer error occurred when uploading.
@@ -40,41 +40,41 @@ function storeStudent(req, res, db) {
 }
 
 // create
-function createStudent(req, res) {
-    res.render('product-create');
+function createProduct(req, res) {
+    res.render('product/product-create');
 }
 
 // index
-function getStudents(req, res, db) {
+function getProducts(req, res, db) {
     const sql = 'SELECT * FROM products';
     db.query(sql, (err, result) => {
         if (err) throw err;
-        res.render('products', { products: result });
+        res.render('product/products', { products: result });
     });
 }
 
 // edit
-function editStudent(req, res, db) {
+function editProduct(req, res, db) {
     const { id } = req.body;
     const sql = 'SELECT * FROM products WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) throw err;
-        res.render('product-edit', { product: result[0] });
+        res.render('product/product-edit', { product: result[0] });
     });
 }
 
 // show
-function showStudent(req, res, db) {
+function showProduct(req, res, db) {
     const { id } = req.body;
     const sql = 'SELECT * FROM products WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) throw err;
-        res.render('product-show', { product: result[0] });
+        res.render('product/product-show', { product: result[0] });
     });
 }
 
 // update
-function updateStudent(req, res, db) {
+function updateProduct(req, res, db) {
     const productId = req.params.id;
     const storage = multer.diskStorage({
         destination: function (req, file, cb) {
@@ -105,7 +105,7 @@ function updateStudent(req, res, db) {
             db.query(sql, [productId], (err, result) => {
                 if (err) throw err;
                 imagePath = result[0].image;
-                updateStudentInDatabase();
+                updateProductInDatabase();
             });
         } else {
             // Delete the previous image associated with the product from the server
@@ -119,11 +119,11 @@ function updateStudent(req, res, db) {
                         console.log(`Image ${previousImagePath} deleted!`);
                     });
                 }
-                updateStudentInDatabase();
+                updateProductInDatabase();
             });
         }
 
-        function updateStudentInDatabase() {
+        function updateProductInDatabase() {
             const sql = 'UPDATE products SET name = ?, email = ?, message = ?, image = ? WHERE id = ?';
             db.query(sql, [name, email, message, imagePath, productId], (err, result) => {
                 if (err) throw err;
@@ -138,7 +138,7 @@ function updateStudent(req, res, db) {
 
 // delete
 // delete
-function deleteStudent(req, res, db) {
+function deleteProduct(req, res, db) {
     const productId = req.params.id;
     const sql = 'SELECT image FROM products WHERE id = ?';
     db.query(sql, [productId], (err, result) => {
@@ -161,4 +161,4 @@ function deleteStudent(req, res, db) {
 
 
 // export
-module.exports = { storeStudent, createStudent, getStudents, editStudent, showStudent, updateStudent, deleteStudent };
+module.exports = { storeProduct, createProduct, getProducts, editProduct, showProduct, updateProduct, deleteProduct };

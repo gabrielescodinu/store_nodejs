@@ -8,6 +8,7 @@ const app = express();
 app.use(express.static("public"));
 
 const studentController = require('./studentController');
+const productController = require('./productController');
 const userController = require('./userController');
 const db = require('./config');
 
@@ -58,6 +59,15 @@ app.post('/student-edit', (req, res) => studentController.editStudent(req, res, 
 app.post('/student-show', (req, res) => studentController.showStudent(req, res, db));
 app.post('/students/:id/update', (req, res) => studentController.updateStudent(req, res, db));
 app.post('/student-delete/:id', (req, res) => studentController.deleteStudent(req, res, db));
+
+// students ---------------------------------------------------------------------------------------------------------------------------------
+app.post('/product-create', (req, res) => productController.storeProduct(req, res, db));
+app.get('/product/product-create', productController.createProduct);
+app.get('/products', (req, res) => productController.getProducts(req, res, db));
+app.post('/product-edit', (req, res) => productController.editProduct(req, res, db));
+app.post('/product-show', (req, res) => productController.showProduct(req, res, db));
+app.post('/products/:id/update', (req, res) => productController.updateProduct(req, res, db));
+app.post('/product-delete/:id', (req, res) => productController.deleteProduct(req, res, db));
 
 // port ---------------------------------------------------------------------------------------------------------------------------------
 app.listen(port, () => {
