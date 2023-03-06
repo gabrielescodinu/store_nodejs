@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Categories List</title>
+</head>
+
+<body>
+    <h1>Categories List</h1>
+    <a href="category/category-create">Create Category</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Action</th> <!-- Aggiungi questa colonna per il bottone di modifica -->
+            </tr>
+        </thead>
+        <tbody>
+            <% categories.forEach(category=> { %>
+                <tr>
+                    <td>
+                        <%= category.name %>
+                    </td>
+                    <td>
+                        <%= category.email %>
+                    </td>
+                    <td>
+                        <%= category.message %>
+                    </td>
+                    <td>
+                        <form action="/category-edit" method="post">
+                            <!-- Aggiungi un form per ogni bottone di modifica -->
+                            <input type="hidden" name="id" value="<%= category.id %>">
+                            <!-- Aggiungi un campo hidden per l'id dello categorye -->
+                            <button type="submit">Edit</button> <!-- Aggiungi il bottone di modifica -->
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/category-show" method="post">
+                            <!-- Aggiungi un form per ogni bottone di modifica -->
+                            <input type="hidden" name="id" value="<%= category.id %>">
+                            <!-- Aggiungi un campo hidden per l'id dello categorye -->
+                            <button type="submit">Show</button> <!-- Aggiungi il bottone di modifica -->
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/category-delete/<%= category.id %>" method="post">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</body>
+
+</html>

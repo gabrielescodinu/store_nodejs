@@ -9,6 +9,7 @@ app.use(express.static("public"));
 
 const studentController = require('./studentController');
 const productController = require('./productController');
+const categoryController = require('./categoryController');
 const userController = require('./userController');
 const db = require('./config');
 
@@ -51,7 +52,7 @@ app.get('/admin', userController.requireLogin, userController.requireAdmin, user
 
 
 
-// students ---------------------------------------------------------------------------------------------------------------------------------
+// student ---------------------------------------------------------------------------------------------------------------------------------
 app.post('/student-create', (req, res) => studentController.storeStudent(req, res, db));
 app.get('/student/student-create', studentController.createStudent);
 app.get('/students', (req, res) => studentController.getStudents(req, res, db));
@@ -60,7 +61,7 @@ app.post('/student-show', (req, res) => studentController.showStudent(req, res, 
 app.post('/students/:id/update', (req, res) => studentController.updateStudent(req, res, db));
 app.post('/student-delete/:id', (req, res) => studentController.deleteStudent(req, res, db));
 
-// students ---------------------------------------------------------------------------------------------------------------------------------
+// product ---------------------------------------------------------------------------------------------------------------------------------
 app.post('/product-create', (req, res) => productController.storeProduct(req, res, db));
 app.get('/product/product-create', productController.createProduct);
 app.get('/products', (req, res) => productController.getProducts(req, res, db));
@@ -68,6 +69,15 @@ app.post('/product-edit', (req, res) => productController.editProduct(req, res, 
 app.post('/product-show', (req, res) => productController.showProduct(req, res, db));
 app.post('/products/:id/update', (req, res) => productController.updateProduct(req, res, db));
 app.post('/product-delete/:id', (req, res) => productController.deleteProduct(req, res, db));
+
+// category ---------------------------------------------------------------------------------------------------------------------------------
+app.post('/category-create', (req, res) => categoryController.storeCategory(req, res, db));
+app.get('/category/category-create', categoryController.createCategory);
+app.get('/categories', (req, res) => categoryController.getCategories(req, res, db));
+app.post('/category-edit', (req, res) => categoryController.editCategory(req, res, db));
+app.post('/category-show', (req, res) => categoryController.showCategory(req, res, db));
+app.post('/categories/:id/update', (req, res) => categoryController.updateCategory(req, res, db));
+app.post('/category-delete/:id', (req, res) => categoryController.deleteCategory(req, res, db));
 
 // port ---------------------------------------------------------------------------------------------------------------------------------
 app.listen(port, () => {
