@@ -1,5 +1,5 @@
 // multer configuration
-const multer  = require('multer');
+const multer = require('multer');
 const path = require('path');
 
 const storage = multer.diskStorage({
@@ -75,12 +75,34 @@ function showStudent(req, res, db) {
 // update
 function updateStudent(req, res, db) {
     const studentId = req.params.id;
-    const { name, email, message } = req.body;
-    const sql = 'UPDATE students SET name = ?, email = ?, message = ? WHERE id = ?';
-    db.query(sql, [name, email, message, studentId], (err, result) => {
-        if (err) throw err;
-        console.log('Student updated!');
-        res.redirect('/students');
+    const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, './public/uploads/');
+        },
+        filename: function (req, file, cb) {
+            const ext = path.parse(file.originalname).ext;
+            cb(null, file.fieldname + '-' + Date.now() + ext);
+        }
+    });
+    const upload = multer({ storage: storage }).single('image');
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred when uploading.
+            console.log('Multer error occurred: ' + err)
+        } else if (err) {
+            // An unknown error occurred when uploading.
+            console.log('Unknown error occurred: ' + err)
+        }
+
+        // Everything went fine. Proceed with updating the student in the database.
+        const { name, email, message } = req.body;
+        const imagePath = req.file ? path.join('./uploads/', req.file.filename) : null;
+        const sql = 'UPDATE students SET name = ?, email = ?, message = ?, image = ? WHERE id = ?';
+        db.query(sql, [name, email, message, imagePath, studentId], (err, result) => {
+            if (err) throw err;
+            console.log('Student updated!');
+            res.redirect('/students');
+        });
     });
 }
 
