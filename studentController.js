@@ -96,15 +96,31 @@ function updateStudent(req, res, db) {
 
         // Everything went fine. Proceed with updating the student in the database.
         const { name, email, message } = req.body;
-        const imagePath = req.file ? path.join('./uploads/', req.file.filename) : null;
-        const sql = 'UPDATE students SET name = ?, email = ?, message = ?, image = ? WHERE id = ?';
-        db.query(sql, [name, email, message, imagePath, studentId], (err, result) => {
-            if (err) throw err;
-            console.log('Student updated!');
-            res.redirect('/students');
-        });
+        let imagePath = req.file ? path.join('./uploads/', req.file.filename) : null;
+
+        if (!imagePath) {
+            // If no new image was uploaded, use the existing image path in the database
+            const sql = 'SELECT image FROM students WHERE id = ?';
+            db.query(sql, [studentId], (err, result) => {
+                if (err) throw err;
+                imagePath = result[0].image;
+                updateStudentInDatabase();
+            });
+        } else {
+            updateStudentInDatabase();
+        }
+
+        function updateStudentInDatabase() {
+            const sql = 'UPDATE students SET name = ?, email = ?, message = ?, image = ? WHERE id = ?';
+            db.query(sql, [name, email, message, imagePath, studentId], (err, result) => {
+                if (err) throw err;
+                console.log('Student updated!');
+                res.redirect('/students');
+            });
+        }
     });
 }
+
 
 // delete
 function deleteStudent(req, res, db) {
