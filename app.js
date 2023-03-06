@@ -52,7 +52,7 @@ app.get('/admin', userController.requireLogin, userController.requireAdmin, user
 
 // students ---------------------------------------------------------------------------------------------------------------------------------
 app.post('/student-create', (req, res) => studentController.storeStudent(req, res, db));
-app.get('/student-create', studentController.createStudent);
+app.get('/student/student-create', studentController.createStudent);
 app.get('/students', (req, res) => studentController.getStudents(req, res, db));
 app.post('/student-edit', (req, res) => studentController.editStudent(req, res, db));
 app.post('/student-show', (req, res) => studentController.showStudent(req, res, db));

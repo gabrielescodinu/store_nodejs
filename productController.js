@@ -26,56 +26,56 @@ function storeStudent(req, res, db) {
             console.log('Unknown error occurred: ' + err)
         }
 
-        // Everything went fine. Proceed with storing the student in the database.
+        // Everything went fine. Proceed with storing the product in the database.
         const { name, email, message } = req.body;
         const imagePath = path.join('./uploads/', req.file.filename);
 
-        const sql = 'INSERT INTO students (name, email, message, image) VALUES (?, ?, ?, ?)';
+        const sql = 'INSERT INTO products (name, email, message, image) VALUES (?, ?, ?, ?)';
         db.query(sql, [name, email, message, imagePath], function (err, result) {
             if (err) throw err;
-            console.log('Student created!');
-            res.redirect('/students');
+            console.log('Product created!');
+            res.redirect('/products');
         });
     });
 }
 
 // create
 function createStudent(req, res) {
-    res.render('student/student-create');
+    res.render('product-create');
 }
 
 // index
 function getStudents(req, res, db) {
-    const sql = 'SELECT * FROM students';
+    const sql = 'SELECT * FROM products';
     db.query(sql, (err, result) => {
         if (err) throw err;
-        res.render('student/students', { students: result });
+        res.render('products', { products: result });
     });
 }
 
 // edit
 function editStudent(req, res, db) {
     const { id } = req.body;
-    const sql = 'SELECT * FROM students WHERE id = ?';
+    const sql = 'SELECT * FROM products WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) throw err;
-        res.render('student/student-edit', { student: result[0] });
+        res.render('product-edit', { product: result[0] });
     });
 }
 
 // show
 function showStudent(req, res, db) {
     const { id } = req.body;
-    const sql = 'SELECT * FROM students WHERE id = ?';
+    const sql = 'SELECT * FROM products WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) throw err;
-        res.render('student/student-show', { student: result[0] });
+        res.render('product-show', { product: result[0] });
     });
 }
 
 // update
 function updateStudent(req, res, db) {
-    const studentId = req.params.id;
+    const productId = req.params.id;
     const storage = multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, './public/uploads/');
@@ -95,22 +95,22 @@ function updateStudent(req, res, db) {
             console.log('Unknown error occurred: ' + err)
         }
 
-        // Everything went fine. Proceed with updating the student in the database.
+        // Everything went fine. Proceed with updating the product in the database.
         const { name, email, message } = req.body;
         let imagePath = req.file ? path.join('./uploads/', req.file.filename) : null;
 
         if (!imagePath) {
             // If no new image was uploaded, use the existing image path in the database
-            const sql = 'SELECT image FROM students WHERE id = ?';
-            db.query(sql, [studentId], (err, result) => {
+            const sql = 'SELECT image FROM products WHERE id = ?';
+            db.query(sql, [productId], (err, result) => {
                 if (err) throw err;
                 imagePath = result[0].image;
                 updateStudentInDatabase();
             });
         } else {
-            // Delete the previous image associated with the student from the server
-            const sql = 'SELECT image FROM students WHERE id = ?';
-            db.query(sql, [studentId], (err, result) => {
+            // Delete the previous image associated with the product from the server
+            const sql = 'SELECT image FROM products WHERE id = ?';
+            db.query(sql, [productId], (err, result) => {
                 if (err) throw err;
                 const previousImagePath = result[0].image;
                 if (previousImagePath) {
@@ -124,11 +124,11 @@ function updateStudent(req, res, db) {
         }
 
         function updateStudentInDatabase() {
-            const sql = 'UPDATE students SET name = ?, email = ?, message = ?, image = ? WHERE id = ?';
-            db.query(sql, [name, email, message, imagePath, studentId], (err, result) => {
+            const sql = 'UPDATE products SET name = ?, email = ?, message = ?, image = ? WHERE id = ?';
+            db.query(sql, [name, email, message, imagePath, productId], (err, result) => {
                 if (err) throw err;
-                console.log('Student updated!');
-                res.redirect('/students');
+                console.log('Product updated!');
+                res.redirect('/products');
             });
         }
     });
@@ -139,22 +139,22 @@ function updateStudent(req, res, db) {
 // delete
 // delete
 function deleteStudent(req, res, db) {
-    const studentId = req.params.id;
-    const sql = 'SELECT image FROM students WHERE id = ?';
-    db.query(sql, [studentId], (err, result) => {
+    const productId = req.params.id;
+    const sql = 'SELECT image FROM products WHERE id = ?';
+    db.query(sql, [productId], (err, result) => {
         if (err) throw err;
         const imagePath = result[0].image;
-        const deleteSql = 'DELETE FROM students WHERE id = ?';
-        db.query(deleteSql, [studentId], (err, result) => {
+        const deleteSql = 'DELETE FROM products WHERE id = ?';
+        db.query(deleteSql, [productId], (err, result) => {
             if (err) throw err;
-            console.log(`Student with id ${studentId} deleted!`);
+            console.log(`Product with id ${productId} deleted!`);
             if (imagePath) {
                 fs.unlink(`./public/${imagePath}`, (err) => {
                     if (err) throw err;
                     console.log(`Image ${imagePath} deleted!`);
                 });
             }
-            res.redirect('/students');
+            res.redirect('/products');
         });
     });
 }
