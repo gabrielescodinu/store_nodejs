@@ -72,12 +72,16 @@ function editProduct(req, res, db) {
 // show
 function showProduct(req, res, db) {
     const { id } = req.body;
-    const sql = 'SELECT * FROM products WHERE id = ?';
+    const sql = `SELECT products.*, categories.name AS category_name 
+                 FROM products 
+                 JOIN categories ON products.category_id = categories.id 
+                 WHERE products.id = ?`;
     db.query(sql, [id], (err, result) => {
         if (err) throw err;
         res.render('product/product-show', { product: result[0] });
     });
 }
+
 
 // update
 function updateProduct(req, res, db) {
