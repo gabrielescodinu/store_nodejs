@@ -63,7 +63,7 @@ app.post('/student-delete/:id', (req, res) => studentController.deleteStudent(re
 
 // product ---------------------------------------------------------------------------------------------------------------------------------
 app.post('/product-create', (req, res) => productController.storeProduct(req, res, db));
-app.get('/product/product-create', productController.createProduct);
+app.get('/product/product-create', (req, res) => { productController.createProduct(req, res, db); });
 app.get('/products', (req, res) => productController.getProducts(req, res, db));
 app.post('/product-edit', (req, res) => productController.editProduct(req, res, db));
 app.post('/product-show', (req, res) => productController.showProduct(req, res, db));

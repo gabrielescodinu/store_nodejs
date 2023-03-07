@@ -21,6 +21,17 @@
 			<input type="message" id="message" name="message" required>
 		</div>
 		<div>
+			<label for="category_id">Category:</label>
+			<select id="category_id" name="category_id">
+				<% categories.forEach(category=> { %>
+					<option value="<%= category.id %>">
+						<%= category.name %>
+					</option>
+					<% }); %>
+			</select>
+		</div>
+
+		<div>
 			<label for="image">image:</label>
 			<input type="file" id="image" name="image">
 		</div>

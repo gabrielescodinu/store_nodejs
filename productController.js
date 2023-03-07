@@ -27,11 +27,11 @@ function storeProduct(req, res, db) {
         }
 
         // Everything went fine. Proceed with storing the product in the database.
-        const { name, email, message } = req.body;
+        const { name, email, message, category_id } = req.body;
         const imagePath = path.join('./uploads/', req.file.filename);
 
-        const sql = 'INSERT INTO products (name, email, message, image) VALUES (?, ?, ?, ?)';
-        db.query(sql, [name, email, message, imagePath], function (err, result) {
+        const sql = 'INSERT INTO products (name, email, message, image, category_id) VALUES (?, ?, ?, ?, ?)';
+        db.query(sql, [name, email, message, imagePath, category_id], function (err, result) {
             if (err) throw err;
             console.log('Product created!');
             res.redirect('/products');
@@ -39,10 +39,16 @@ function storeProduct(req, res, db) {
     });
 }
 
+
 // create
-function createProduct(req, res) {
-    res.render('product/product-create');
+function createProduct(req, res, db) {
+    const sql = 'SELECT * FROM categories';
+    db.query(sql, (err, categories) => {
+        if (err) throw err;
+        res.render('product/product-create', { categories });
+    });
 }
+
 
 // index
 function getProducts(req, res, db) {
