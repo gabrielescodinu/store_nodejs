@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Books List</title>
+    <!-- bootstrap cdn -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-center ">
+            <div class="col-12 col-md-8">
+                <h1>Books List</h1>
+
+                <a href="/addBook" class="btn btn-primary mb-3 float-right">Create Book</a>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let book of books) { %>
+                        <tr>
+                            <td><%= book.id %></td>
+                            <td><%= book.title %></td>
+                            <td><%= book.author %></td>
+                            
+                            <td>
+                                <a href="/edit-book/<%= book.id %>" class="btn btn-primary">Edit</a>
+                                <a href="/delete-book/<%= book.id %>" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
