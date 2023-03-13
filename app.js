@@ -16,6 +16,12 @@ const db = require('./config');
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 
+process.env.STRIPE_TEST_SECRET_KEY = '<your-test-secret-key>';
+process.env.STRIPE_LIVE_SECRET_KEY = '<your-live-secret-key>';
+
+const stripe = require('stripe')('sk_test_51MjJp2DgazLEDsewHecS2NUeETt5E1fCCKJ23pWGnRgSYreJ6T1F28djVQZ2D9OaA7DAuuiBbKszUGmAVElK5lF400UIoukbWY');
+
+
 const port = 3000;
 
 // configuration middleware and express application ---------------------------------------------------------------------------------------------------------------------------------
@@ -78,6 +84,25 @@ app.post('/category-edit', (req, res) => categoryController.editCategory(req, re
 app.post('/category-show', (req, res) => categoryController.showCategory(req, res, db));
 app.post('/categories/:id/update', (req, res) => categoryController.updateCategory(req, res, db));
 app.post('/category-delete/:id', (req, res) => categoryController.deleteCategory(req, res, db));
+
+app.post('/charge', async (req, res) => {
+    try {
+        const { product, price, token } = req.body;
+
+        const charge = await stripe.charges.create({
+            amount: price * 100,
+            currency: 'usd',
+            description: product,
+            source: token.id,
+        });
+
+        res.status(200).json({ message: 'Payment successful' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Payment failed' });
+    }
+});
+
 
 // port ---------------------------------------------------------------------------------------------------------------------------------
 app.listen(port, () => {
