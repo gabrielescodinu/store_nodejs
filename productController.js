@@ -163,6 +163,7 @@ function deleteProduct(req, res, db) {
     });
 }
 
+// stripe charge payment
 charge = async (req, res) => {
     try {
         const { productId, stripeToken } = req.body;

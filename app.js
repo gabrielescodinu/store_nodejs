@@ -22,6 +22,7 @@ process.env.STRIPE_LIVE_SECRET_KEY = '<your-live-secret-key>';
 const stripe = require('stripe')('pk_test_51MjJp2DgazLEDsewryLztA5IxrOHUQtqVqtYq345FGuP6Qehb1pySw3xS1yc39ZVNzsnPxIausAFDHxF1PYQjeAP00PFdldIRu');
 
 const port = 3000;
+
 // configuration middleware and express application ---------------------------------------------------------------------------------------------------------------------------------
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
