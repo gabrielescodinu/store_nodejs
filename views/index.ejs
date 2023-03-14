@@ -3,3 +3,17 @@
 <a href="registration">Register</a>
 <br>
 <a href="students">Students</a>
+
+<form action="/charge" method="POST">
+    <input type="text" name="product" placeholder="Product name">
+    <input type="number" name="price" placeholder="Price">
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="pk_test_51MjJp2DgazLEDsewryLztA5IxrOHUQtqVqtYq345FGuP6Qehb1pySw3xS1yc39ZVNzsnPxIausAFDHxF1PYQjeAP00PFdldIRu"
+      data-amount=""
+      data-name=""
+      data-description=""
+      data-image=""
+      data-currency="usd">
+    </script>
+  </form>
+  
