@@ -163,6 +163,28 @@ function deleteProduct(req, res, db) {
     });
 }
 
+charge = async (req, res) => {
+    try {
+        const { productId, stripeToken } = req.body;
+
+        // Recupera il prodotto dal database
+        const product = await Product.findById(productId);
+
+        // Effettua il pagamento tramite Stripe
+        const charge = await stripe.charges.create({
+            amount: product.price * 100,
+            currency: 'usd',
+            description: product.name,
+            source: stripeToken,
+        });
+
+        res.render('success', { product });
+    } catch (error) {
+        console.error(error);
+        res.render('error');
+    }
+};
+
 
 // export
 module.exports = { storeProduct, createProduct, getProducts, editProduct, showProduct, updateProduct, deleteProduct };
