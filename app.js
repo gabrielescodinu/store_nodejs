@@ -16,11 +16,6 @@ const db = require('./config');
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 
-process.env.STRIPE_TEST_SECRET_KEY = '<your-test-secret-key>';
-process.env.STRIPE_LIVE_SECRET_KEY = '<your-live-secret-key>';
-
-const stripe = require('stripe')('sk_test_51MjJp2DgazLEDsewHecS2NUeETt5E1fCCKJ23pWGnRgSYreJ6T1F28djVQZ2D9OaA7DAuuiBbKszUGmAVElK5lF400UIoukbWY');
-
 const port = 3000;
 
 // configuration middleware and express application ---------------------------------------------------------------------------------------------------------------------------------
