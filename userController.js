@@ -90,7 +90,15 @@ const requireLogin = (req, res, next) => {
 
 // dashboard
 const dashboard = (req, res) => {
-    res.render('dashboard');
+    const userId = req.session.user.id
+
+    // esegui una query SQL per selezionare i pagamenti dell'utente loggato
+    db.query('SELECT * FROM payments WHERE user_id = ?', [userId], (err, results) => {
+        if (err) throw err;
+
+        // passa i risultati della query alla vista dashboard
+        res.render('dashboard', { payments: results });
+    });
 };
 
 module.exports = { createUser, getCreateUserPage, login, loginUser, requireAdmin, adminOnlyHandler, logout, requireLogin, dashboard };

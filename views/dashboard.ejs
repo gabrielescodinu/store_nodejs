@@ -1,2 +1,9 @@
 <h1>Welcome to the dashboard!</h1>
 <a href="logout">Logout</a>
+
+<h2>I tuoi pagamenti:</h2>
+<ul>
+    <% payments.forEach(payment => { %>
+        <li><%= payment.charge_id %></li>
+    <% }) %>
+</ul>
