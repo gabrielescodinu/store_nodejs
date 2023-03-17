@@ -8,9 +8,11 @@
 <body>
     <h1>Pagamento effettuato con successo!</h1>
 
+    <h2>Informazioni utente</h2>
+    <p>Nome utente: <%= user.username %></p>
+
     <h2>Dettagli prodotto</h2>
     <p>Nome: <%= product.name %></p>
-    <p>Prezzo: <%= product.price %></p>
     
     <h2>Dettagli pagamento</h2>
     <p>Token ID: <%= charge.id %></p>

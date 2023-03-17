@@ -167,11 +167,9 @@ charge = async (req, res, db) => {
         const { productId, stripeToken } = req.body;
 
         const sql = 'SELECT * FROM products WHERE id = ?';
-        
+
         db.query(sql, [productId], async (err, result) => {
             if (err) throw err;
-            // print product details in console log for testing purposes only 
-            console.log(result[0]);
             const product = result[0];
 
             // Effettua il pagamento tramite Stripe
@@ -182,19 +180,31 @@ charge = async (req, res, db) => {
                 source: stripeToken,
             });
 
-            console.log('Payment successful');
-            res.render('success', { product, charge });
+            // print the id of the user who made the payment in the console
+
+            // Ottieni le informazioni dell'utente dalla sessione
+            const userId = req.session.user.id;
+
+            const userSql = 'SELECT * FROM users WHERE id = ?';
+            db.query(userSql, [userId], async (err, userResult) => {
+                if (err) throw err;
+                const user = userResult[0];
+
+                // Salva i dati della transazione nel database
+                const paymentSql = 'INSERT INTO payments (user_id, product_name, charge_id, amount) VALUES (?, ?, ?, ?)';
+                db.query(paymentSql, [user.id, product.name, charge.id, charge.amount / 100], (err, paymentResult) => {
+                    if (err) throw err;
+                    console.log('Payment successful');
+                    console.log(user);
+                    res.render('success', { product, charge, user });
+                });
+            });
         });
     } catch (error) {
         console.error(error);
         res.render('error');
     }
 };
-
-
-
-
-
 
 
 // export
