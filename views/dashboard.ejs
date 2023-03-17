@@ -5,5 +5,8 @@
 <ul>
     <% payments.forEach(payment => { %>
         <li><%= payment.charge_id %></li>
+        <li><%= payment.product_name %></li>
+        <li><%= payment.amount %></li>
+        <hr>
     <% }) %>
 </ul>
