@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 process.env.STRIPE_TEST_SECRET_KEY = '<your-test-secret-key>';
 process.env.STRIPE_LIVE_SECRET_KEY = '<your-live-secret-key>';
 
-const stripe = require('stripe')('pk_test_51MjJp2DgazLEDsewryLztA5IxrOHUQtqVqtYq345FGuP6Qehb1pySw3xS1yc39ZVNzsnPxIausAFDHxF1PYQjeAP00PFdldIRu');
+const stripe = require('stripe')('sk_test_51MjJp2DgazLEDsewHecS2NUeETt5E1fCCKJ23pWGnRgSYreJ6T1F28djVQZ2D9OaA7DAuuiBbKszUGmAVElK5lF400UIoukbWY');
 
 const port = 3000;
 
@@ -34,9 +34,7 @@ app.use(session({
 }));
 
 // homepage ---------------------------------------------------------------------------------------------------------------------------------
-app.get('/', (req, res) => {
-    res.render('index');
-});
+app.get('/', (req, res) => { res.render('index'); });
 
 // user ---------------------------------------------------------------------------------------------------------------------------------
 // login
@@ -71,7 +69,8 @@ app.post('/product-edit', (req, res) => productController.editProduct(req, res, 
 app.post('/product-show', (req, res) => productController.showProduct(req, res, db));
 app.post('/products/:id/update', (req, res) => productController.updateProduct(req, res, db));
 app.post('/product-delete/:id', (req, res) => productController.deleteProduct(req, res, db));
-
+app.post('/charge', (req, res) => { productController.charge(req, res, db); });
+  
 // category ---------------------------------------------------------------------------------------------------------------------------------
 app.post('/category-create', (req, res) => categoryController.storeCategory(req, res, db));
 app.get('/category/category-create', categoryController.createCategory);

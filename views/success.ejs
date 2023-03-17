@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Show Product</title>
+</head>
+
+<body>
+    <h1>Pagamento effettuato con successo!</h1>
+
+    <h2>Dettagli prodotto</h2>
+    <p>Nome: <%= product.name %></p>
+    <p>Prezzo: <%= product.price %></p>
+    
+    <h2>Dettagli pagamento</h2>
+    <p>Token ID: <%= charge.id %></p>
+    <p>Importo: <%= charge.amount / 100 %> USD</p>
+</body>
+
+</html>

@@ -2,6 +2,7 @@
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const stripe = require('stripe')('sk_test_51MjJp2DgazLEDsewHecS2NUeETt5E1fCCKJ23pWGnRgSYreJ6T1F28djVQZ2D9OaA7DAuuiBbKszUGmAVElK5lF400UIoukbWY');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -39,7 +40,6 @@ function storeProduct(req, res, db) {
     });
 }
 
-
 // create
 function createProduct(req, res, db) {
     const sql = 'SELECT * FROM categories';
@@ -48,7 +48,6 @@ function createProduct(req, res, db) {
         res.render('product/product-create', { categories });
     });
 }
-
 
 // index
 function getProducts(req, res, db) {
@@ -78,7 +77,6 @@ function showProduct(req, res, db) {
         res.render('product/product-show', { product: result[0] });
     });
 }
-
 
 // update
 function updateProduct(req, res, db) {
@@ -164,22 +162,29 @@ function deleteProduct(req, res, db) {
 }
 
 // stripe charge payment
-charge = async (req, res) => {
+charge = async (req, res, db) => {
     try {
         const { productId, stripeToken } = req.body;
 
-        // Recupera il prodotto dal database
-        const product = await Product.findById(productId);
+        const sql = 'SELECT * FROM products WHERE id = ?';
+        
+        db.query(sql, [productId], async (err, result) => {
+            if (err) throw err;
+            // print product details in console log for testing purposes only 
+            console.log(result[0]);
+            const product = result[0];
 
-        // Effettua il pagamento tramite Stripe
-        const charge = await stripe.charges.create({
-            amount: product.price * 100,
-            currency: 'usd',
-            description: product.name,
-            source: stripeToken,
+            // Effettua il pagamento tramite Stripe
+            const charge = await stripe.charges.create({
+                amount: product.price * 100,
+                currency: 'usd',
+                description: product.name,
+                source: stripeToken,
+            });
+
+            console.log('Payment successful');
+            res.render('success', { product, charge });
         });
-
-        res.render('success', { product });
     } catch (error) {
         console.error(error);
         res.render('error');
@@ -187,5 +192,10 @@ charge = async (req, res) => {
 };
 
 
+
+
+
+
+
 // export
-module.exports = { storeProduct, createProduct, getProducts, editProduct, showProduct, updateProduct, deleteProduct };
+module.exports = { storeProduct, createProduct, getProducts, editProduct, showProduct, updateProduct, deleteProduct, charge };

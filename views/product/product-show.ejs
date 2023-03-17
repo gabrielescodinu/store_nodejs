@@ -20,15 +20,32 @@
 
     <img src="<%= product.image %>" alt="product image" width="100px">
 
-    <form action="/charge" method="POST">
-        <input type="hidden" name="productId" value="<%= product._id %>">
-        <input type="hidden" name="stripeToken" value="">
-        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_test_51MjJp2DgazLEDsewryLztA5IxrOHUQtqVqtYq345FGuP6Qehb1pySw3xS1yc39ZVNzsnPxIausAFDHxF1PYQjeAP00PFdldIRu"
-            data-amount="<%= product.price * 100 %>" data-name="<%= product.name %>"
-            data-description="<%= product.description %>" data-image="<%= product.imageUrl %>" data-currency="usd">
-            </script>
+    <form action="/charge" method="POST" id="payment-form">
+        <input type="hidden" name="productId" value="<%= product.id %>">
+        <input type="hidden" name="stripeToken" id="stripeToken" value="">
+        <button type="button" onclick="stripeHandler.open({
+          name: '<%= product.name %>',
+          description: '<%= product.description %>',
+          amount: <%= product.price * 100 %>
+        })">Paga <%= product.price %> €</button>
     </form>
 
+
 </body>
+
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script>
+    var stripeHandler = StripeCheckout.configure({
+        key: 'sk_test_51MjJp2DgazLEDsewHecS2NUeETt5E1fCCKJ23pWGnRgSYreJ6T1F28djVQZ2D9OaA7DAuuiBbKszUGmAVElK5lF400UIoukbWY', // sostituisci con la tua chiave pubblica
+        locale: 'auto',
+        token: function (token) {
+            // Aggiungi il token come valore dell'input "stripeToken" del form
+            document.getElementById('stripeToken').value = token.id;
+            // Invia il form per effettuare il pagamento
+            document.getElementById('payment-form').submit();
+        }
+    });
+</script>
+
 
 </html>
