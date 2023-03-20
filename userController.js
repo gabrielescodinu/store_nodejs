@@ -1,10 +1,15 @@
+const bcrypt = require('bcrypt');
+
 // registration ---------------------------------------------------------------------------------------------------------------------------------
-function createUser(req, res, db) {
+async function createUser(req, res, db) {
     const { username, password } = req.body;
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert new user into the database
     const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
-    db.query(sql, [username, password], (err, result) => {
+    db.query(sql, [username, hashedPassword], (err, result) => {
         if (err) throw err;
         console.log('User created!');
         res.redirect('/login');
@@ -28,14 +33,16 @@ const loginUser = (req, res) => {
 
     // Check if the username exists in the database
     const sql = 'SELECT * FROM users WHERE username = ?';
-    db.query(sql, [username], (err, result) => {
+    db.query(sql, [username], async (err, result) => {
         if (err) throw err;
 
         if (result.length === 1) {
             const user = result[0];
 
             // Check if the password is correct
-            if (user.password === password) {
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+
+            if (isPasswordValid) {
                 req.session.loggedIn = true;
                 req.session.user = {
                     id: user.id,
